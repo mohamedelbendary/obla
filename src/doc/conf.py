@@ -5,10 +5,10 @@ source_suffix = {'.rst': 'restructuredtext'}
 master_doc = 'index'
 exclude_patterns = []
 pygments_style = 'colorful'
-project = '<acronym>'
-release = '<version>'
-html_title = "<acronym>"
-author = '<author>'
+project = 'OBLA'
+release = '0.1'
+html_title = "OBLA 0.1"
+author = 'Mohamed ElBendary'
 
 numfig = True
 
@@ -21,10 +21,10 @@ latex_documents = [
 
 # --- Cover metadata: single source of truth for index.rst (via substitutions)
 # and the LaTeX cover (via \newcommand interpolation below). Edit here.
-cover_title    = '<acronym>'
-cover_series   = '<series or category>'
-cover_subject  = '<subject line>'
-cover_subtitle = '<subtitle of this document>'
+cover_title    = 'OBLA'
+cover_series   = 'FG-TIDA contribution, first in-person meeting (Paris, 30 November to 1 December 2026)'
+cover_subject  = 'Contribution in individual capacity. Target: WG2 (IBEA), deliverables 1 and 2'
+cover_subtitle = 'Operation-Bound Least Agency: Requirements for Enforcing Security Policy on Agent Actions'
 
 extensions = ['sphinxcontrib.httpdomain','sphinxcontrib.plantuml','sphinxcontrib.openapi', 'sphinx_copybutton']
 # PlantUML command. On CI (GitHub Actions / Read the Docs) the `plantuml` package
@@ -35,10 +35,8 @@ extensions = ['sphinxcontrib.httpdomain','sphinxcontrib.plantuml','sphinxcontrib
 import os as _os
 plantuml = _os.environ.get("PLANTUML", "plantuml")
 plantuml_output_format = 'svg'
-templates_path = ['_templates']
-html_js_files = [
-    "osia-sidebar.js",
-]
+templates_path = []
+html_js_files = []
 
 exclude_patterns = ['_*.rst', '*/_*.rst']
 
@@ -48,7 +46,7 @@ rst_prolog = '''
   :http-equiv=X-UA-Compatible: IE=9    
 
 .. |tick|   unicode:: U+2714 .. HEAVY CHECK MARK
-.. |project| replace:: OSIA
+.. |project| replace:: OBLA
 .. |release| replace:: '''+release+'''
 .. |cover-title|    replace:: '''+cover_title+'''
 .. |cover-series|   replace:: '''+cover_series+'''
@@ -109,10 +107,10 @@ html_theme_options = {
 }
 html_logo = "images/TIDA_logo.png"
 html_show_sourcelink = False
-copyright = '<year>, <author>'
+copyright = '2026, Mohamed ElBendary'
 html_context = {'project':project, 'version':release, 'copyright': copyright}
 html_last_updated_fmt = '%b %d, %Y'
-html_extra_path = ['yaml']
+html_extra_path = []
 
 #
 # Latex/PDF Output Configuration
@@ -143,6 +141,7 @@ latex_elements = {
  # no raw string can contain '\u' (this is interpreted as unicode char)
  'preamble': u'''
 \\usepackage{bbding,pifont} %% two dingbat fonts
+\\hyphenpenalty=10000 \\exhyphenpenalty=10000 \\tolerance=2000 \\emergencystretch=3em %% no word breaks across lines
 \\usepackage{attachfile}
 
 \\attachfilesetup{color=0 0.5 0.5}
@@ -190,8 +189,33 @@ latex_elements = {
     \if@openright\cleardoublepage\else\clearpage\fi
   }%
   \title{Rec. ITU-T}%
-  \release{<acronym>}%
+  \release{OBLA 0.1}%
 }
+
+%% Running footer: page number only. Sphinx's default footer prints the
+%% chapter mark, which this template leaves at "Contents".
+\makeatletter
+\AtBeginDocument{%
+  \fancypagestyle{normal}{%
+    \fancyhf{}%
+    \fancyfoot[RO]{{\py@HeaderFamily\thepage}}%
+    \fancyhead[RO]{{\py@HeaderFamily \@title\sphinxheadercomma\py@release}}%
+    \if@twoside
+      \fancyfoot[LE]{{\py@HeaderFamily\thepage}}%
+      \fancyhead[LE]{{\py@HeaderFamily \@title\sphinxheadercomma\py@release}}%
+    \fi
+    \renewcommand{\headrulewidth}{0.4pt}%
+    \renewcommand{\footrulewidth}{0.4pt}%
+  }%
+}
+\makeatother
+
+%% Keep a heading with the start of its content.
+\usepackage{etoolbox}
+\usepackage{needspace}
+\preto\section{\Needspace*{6\baselineskip}}
+\preto\subsection{\Needspace*{5\baselineskip}}
+\preto\subsubsection{\Needspace*{4\baselineskip}}
 
 %% Hide the next \chapter heading. Used to suppress the "Overview" chapter
 %% title on its opening page while keeping the chapter in the TOC.
@@ -338,10 +362,8 @@ latex_elements = {
   # TOC suppressed at its default slot; emitted manually at the end of
   # 00 - overview.rst so the overview chapter physically precedes the TOC.
   'tableofcontents': '',
-  'atendofbody':u'''
-  \\listoftables
-  \\listoffigures
- ''',
+  # No captioned tables or figures in this document.
+  'atendofbody': '',
 
 'classoptions' : ',english,openany,oneside'
 }
@@ -366,10 +388,10 @@ def setup(app):
                 shutil.copy(os.path.join(root, f), app.outdir)
 
 
-if 'itu' in tags:
+if True:
     rst_prolog += '''
-.. |osia| replace:: ITU-T <acronym>
-.. |specification| replace:: recommendation
+.. |osia| replace:: FG-TIDA OBLA
+.. |specification| replace:: contribution
 .. |chapter| replace:: clause
     '''
 else:
